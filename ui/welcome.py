@@ -1,6 +1,8 @@
+from ui.button_render import ButtonEnum
 from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y, backlight
 import time
 from picographics import measure_text
+import button_render
 
 class Welcome():
 
@@ -40,19 +42,11 @@ class Welcome():
         # And value
         display.rectangle(5, 5, 5, (HEIGHT - 10) * backlight)
 
-        # Button labels
-        width = measure_text("Bright -")
-        display.text("Bright +", width/2 + 2, HEIGHT - 8)
-        display.text("Bright -", width/2 + 2, 8)
-        display.text("Start", WIDTH - width/2 - 2, 8)
-
-        # And label outlines
-        display.line(0, HEIGHT-16, width + 4, HEIGHT-16)
-        display.line(width + 4, HEIGHT, width + 4, HEIGHT-16)
-        display.line(0, 16, width + 4, 16)
-        display.line(width+4, 0, width+4, 16)
-        display.line(WIDTH, 16, WIDTH - (width + 4), 16)
-        display.line(WIDTH - (width+4), 0, WIDTH - (width+4), 16)
+        # Buttons
+        width = max(measure_text("Bright -"), measure_text("Bright +"))
+        button_render.place_button("Bright +", width, 16, ButtonEnum.TOP_LEFT)
+        button_render.place_button("Bright -", width, 16, ButtonEnum.BOTTOM_LEFT)
+        button_render.place_button("Start", width, 16, ButtonEnum.BOTTOM_RIGHT)
 
         display.update()
 

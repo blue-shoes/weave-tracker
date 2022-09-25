@@ -1,5 +1,7 @@
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y, backlight
+from ui.button_render import ButtonEnum
+from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y
 import time
+import button_render
 
 class StartMenu():
 
@@ -19,3 +21,13 @@ class StartMenu():
             if self.resume_button.read():
                 self.new_proj = False
                 finished = True
+    
+    def main_display(self):
+        display.clear()
+        display.text("Start Menu", WIDTH/2, HEIGHT/2)
+
+        width = measure_text("Resume Project")
+
+        button_render.place_button("Resume Project", width, 16, ButtonEnum.BOTTOM_LEFT)
+        button_render.place_button("New Project", width, 16, ButtonEnum.BOTTOM_RIGHT)
+        display.update()
