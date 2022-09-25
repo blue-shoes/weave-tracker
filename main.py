@@ -3,6 +3,7 @@
 from project import Project
 from pimoroni import Button
 from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY, PEN_RGB332
+from ui.welcome import Welcome
 
 display = PicoGraphics(display=DISPLAY_PICO_DISPLAY, pen_type=PEN_RGB332, rotate=90)
 backlight = 0.5
@@ -16,4 +17,5 @@ button_y = Button(15)
 
 WIDTH, HEIGHT = display.get_bound()
 
+welcome = Welcome()
 

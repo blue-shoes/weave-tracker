@@ -8,7 +8,7 @@ class Welcome():
     bright_down = button_b
     next_screen = button_y
 
-    def run(self):
+    def open(self):
         # Main display
         self.main_display()
         finished = False
