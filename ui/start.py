@@ -1,5 +1,5 @@
 from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y
+from ..main import display, WIDTH, HEIGHT, button_b, button_y, project
 import time
 import button_render
 
@@ -28,6 +28,7 @@ class StartMenu():
 
         width = measure_text("Resume Project")
 
-        button_render.place_button("Resume Project", width, 16, ButtonEnum.BOTTOM_LEFT)
+        if project is not None:
+            button_render.place_button("Resume Project", width, 16, ButtonEnum.BOTTOM_LEFT)
         button_render.place_button("New Project", width, 16, ButtonEnum.BOTTOM_RIGHT)
         display.update()
