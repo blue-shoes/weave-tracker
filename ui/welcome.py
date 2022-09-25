@@ -20,10 +20,11 @@ class Welcome():
                     backlight = backlight + 0.1
                     display.set_backlight = backlight
                     self.main_display()
-            if self.bright_down.read() > 0.1:
-                backlight = backlight - 0.1
-                display.set_backlight = backlight
-                self.main_display()
+            if self.bright_down.read():
+                if backlight > 0.1:
+                    backlight = backlight - 0.1
+                    display.set_backlight = backlight
+                    self.main_display()
             if self.next_screen.read():
                 finished = True
 
