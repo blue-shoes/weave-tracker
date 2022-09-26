@@ -1,5 +1,5 @@
 from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y, backlight
+from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_y, backlight
 import time
 from picographics import measure_text
 import button_render

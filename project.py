@@ -1,5 +1,5 @@
 class Project():
-    def __init__(self, total_steps, levers=4, current_step=0):
+    def __init__(self, total_steps=4, levers=4, current_step=0):
         self.levers = levers
         self.current_step=0
         self.sequence=[]
