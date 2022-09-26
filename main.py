@@ -5,7 +5,7 @@ from pimoroni import Button
 from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY, PEN_RGB332
 from ui.welcome import Welcome
 from ui.start import StartMenu
-from ui.setup import Setup
+from ui import setup
 import os
 import json
 
@@ -34,3 +34,6 @@ welcome.open()
 start = StartMenu()
 start.open()
 
+if start.new_proj:
+    project = Project()
+    setup.setup()
