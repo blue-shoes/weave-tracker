@@ -2,11 +2,8 @@ class Project():
     def __init__(self, total_steps=4, levers=4, current_step=0):
         self.levers = levers
         self.current_step=0
-        self.sequence=[]
+        self.sequence={}
         self.total_steps=total_steps
-    
-    def add_sequence(self, seq):
-        self.sequence.append(seq)
     
     def get_sequence(self, step):
         self.sequence[step]
@@ -22,3 +19,7 @@ class Project():
         if self.current_step < 0:
             self.current_step = self.total_steps-1
         return self.sequence[self.current_step]
+    
+    def initialize(self):
+        for step in range(self.total_steps):
+            self.sequence[step] = [0 for x in range(self.levers)]
