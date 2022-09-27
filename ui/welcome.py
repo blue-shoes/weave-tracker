@@ -1,5 +1,5 @@
 from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_y, backlight
+from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_y, backlight, BTN_HEIGHT
 import time
 from picographics import measure_text
 import button_render
@@ -44,9 +44,9 @@ class Welcome():
 
         # Buttons
         width = max(measure_text("Bright -"), measure_text("Bright +"))
-        button_render.place_button("Bright +", width, 16, ButtonEnum.TOP_LEFT)
-        button_render.place_button("Bright -", width, 16, ButtonEnum.BOTTOM_LEFT)
-        button_render.place_button("Start", width, 16, ButtonEnum.BOTTOM_RIGHT)
+        button_render.place_button("Bright +", width, BTN_HEIGHT, ButtonEnum.TOP_LEFT)
+        button_render.place_button("Bright -", width, BTN_HEIGHT, ButtonEnum.BOTTOM_LEFT)
+        button_render.place_button("Start", width, BTN_HEIGHT, ButtonEnum.BOTTOM_RIGHT)
 
         display.update()
 

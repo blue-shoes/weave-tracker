@@ -23,6 +23,10 @@ button_y = Button(15)
 
 WIDTH, HEIGHT = display.get_bound()
 
+BTN_HEIGHT = 16
+LEVER_DIST = 50
+MAX_LEVER_WIDTH = 30
+
 project = None
 if os.path.exists(project_file):
     f = open(project_file)
