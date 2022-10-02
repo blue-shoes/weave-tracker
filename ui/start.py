@@ -1,12 +1,14 @@
-from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_b, button_y, project, BTN_HEIGHT
+from ui.button_render import TOP_RIGHT, TOP_LEFT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
-import button_render
+from ui import button_render
 
 class StartMenu():
 
-    new_proj_button = button_y
-    resume_button = button_b
+    def __init__(self, hardware, project):
+        self.hardware = hardware
+        self.new_proj_button = self.hardware.button_y
+        self.resume_button = self.hardware.button_b
+        self.project = project
 
     def open(self):
         # Main display
@@ -23,12 +25,15 @@ class StartMenu():
                 finished = True
     
     def main_display(self):
-        display.clear()
-        display.text("Start Menu", WIDTH/2, HEIGHT/2)
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.clear()
+        self.hardware.display.set_pen(self.hardware.FG)
+        width = self.hardware.display.measure_text('Start Menu',scale=1.0)
+        self.hardware.display.text("Start Menu", int(self.hardware.WIDTH/2 - width/2), int(self.hardware.HEIGHT/2), scale=1.0)
 
-        width = measure_text("Resume Project")
+        width = self.hardware.display.measure_text("Resume Project", scale=0.5)
 
-        if project is not None:
-            button_render.place_button("Resume Project", width, BTN_HEIGHT, ButtonEnum.BOTTOM_LEFT)
-        button_render.place_button("New Project", width, BTN_HEIGHT, ButtonEnum.BOTTOM_RIGHT)
-        display.update()
+        if self.project is not None:
+            button_render.place_button(self.hardware, "Resume Project", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
+        button_render.place_button(self.hardware, "New Project", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
+        self.hardware.display.update()
