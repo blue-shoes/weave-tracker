@@ -25,4 +25,4 @@ start.open()
 
 if start.new_proj:
     project = Project()
-    setup.setup()
+    setup.setup(hardware, project)

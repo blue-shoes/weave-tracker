@@ -1,7 +1,6 @@
-from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_x, button_y, project, BTN_HEIGHT, LEVER_DIST, MAX_LEVER_WIDTH
+from ui.button_render import TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
-import button_render
+from ui import button_render
 
 up_btn = button_a
 down_btn = button_b
@@ -11,17 +10,23 @@ next_btn = button_y
 class Stage1():
 
     steps = True
+    
+    def __init__(self, hardware, project):
+        self.hardware = hardware
+        self.project = project
 
     def open(self):
-        display.clear()
-        display.text("Steps:", WIDTH/4, HEIGHT/3)
-        display.text("Levers:", 3*WIDTH/4, 2*HEIGHT/3)
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.clear()
+        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.display.text("Steps:", self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
+        self.hardware.display.text("Levers:", 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
 
-        width = max(measure_text("Increase"), measure_text("Decrease"))
-        button_render.place_button("Back", width, BTN_HEIGHT, ButtonEnum.TOP_LEFT)
-        button_render.place_button("Next", width, BTN_HEIGHT, ButtonEnum.TOP_RIGHT)
-        button_render.place_button("Increase", width, BTN_HEIGHT, ButtonEnum.BOTTOM_LEFT)
-        button_render.place_button("Decrease", width, BTN_HEIGHT, ButtonEnum.BOTTOM_RIGHT)
+        width = max(self.hardware.display.measure_text("Increase", scale=0.5), self.hardware.display.measure_text("Decrease", scale=0.5))
+        button_render.place_button(self.hardware, "Back", width, self.hardware.BTN_HEIGHT, TOP_LEFT)
+        button_render.place_button(self.hardware, "Next", width, self.hardware.BTN_HEIGHT, TOP_RIGHT)
+        button_render.place_button(self.hardware, "Increase", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
+        button_render.place_button(self.hardware, "Decrease", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
 
         self.update_display()
 
@@ -30,19 +35,19 @@ class Stage1():
             time.sleep(0.1)
             if up_btn.read():
                 if self.steps:
-                    project.total_steps = project.total_steps+1
+                    self.project.total_steps = self.project.total_steps+1
                     self.update_steps()
                 else:
-                    project.levers = project.levers+1
+                    self.project.levers = self.project.levers+1
                     self.update_levers()
             if down_btn.read():
                 if self.steps:
-                    if project.total_steps > 1:
-                        project.total_steps = project.total_steps-1
+                    if self.project.total_steps > 1:
+                        self.project.total_steps = self.project.total_steps-1
                         self.update_steps()
                 else:
-                    if project.levers > 1:
-                        project.levers = project.levers-1
+                    if self.project.levers > 1:
+                        self.project.levers = self.project.levers-1
                         self.update_levers()
             if next_btn.read():
                 if self.steps:
@@ -58,18 +63,24 @@ class Stage1():
         self.update_levers()
     
     def update_steps(self):
-        display.rectangle(WIDTH/8, HEIGHT/2, WIDTH/4, HEIGHT/3)
-        display.text(project.total_steps, WIDTH/4, 2*HEIGHT/3)
-        display.update()
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.rectangle(self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
+        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.display.text(self.project.total_steps, self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
+        self.hardware.display.update()
     
     def update_levers(self):
-        display.rectangle(5*WIDTH/8, HEIGHT/2, WIDTH/4, HEIGHT/3)
-        display.text(project.levers, 3*WIDTH/4, 2*HEIGHT/3)
-        display.update()
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.rectangle(5*self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
+        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.display.text(self.project.levers, 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
+        self.hardware.display.update()
 
 class Stage2():
 
-    def __init__(self, step, lever_width, margin, radius):
+    def __init__(self, hardware, project, step, lever_width, margin, radius):
+        self.hardware = hardware
+        self.project = project
         self.step = step
         self.lever = 0
         self.lever_width = lever_width
@@ -78,25 +89,26 @@ class Stage2():
 
     def open(self):
         next = False
-        display.clear()
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.clear()
+        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.display.text(f"Step {self.step}/{self.project.total_steps}", self.hardware.WIDTH/2, self.hardware.HEIGHT - 20)
 
-        display.text(f"Step {self.step}/{project.total_steps}", WIDTH/2, HEIGHT - 20)
+        self.hardware.display.text("Set Lever positions", self.hardware.WIDTH/2, 20)
 
-        display.text("Set Lever positions", WIDTH/2, 20)
+        width = max(self.hardware.display.measure_text("Increase"), self.hardware.display.measure_text("Decrease"))
+        button_render.place_button(self.hardware, "Back", width, self.hardware.BTN_HEIGHT, TOP_LEFT)
+        button_render.place_button(self.hardware, "Next", width, self.hardware.BTN_HEIGHT, TOP_RIGHT)
+        button_render.place_button(self.hardware, "Up", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
+        button_render.place_button(self.hardware, "Down", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
 
-        width = max(measure_text("Increase"), measure_text("Decrease"))
-        button_render.place_button("Back", width, BTN_HEIGHT, ButtonEnum.TOP_LEFT)
-        button_render.place_button("Next", width, BTN_HEIGHT, ButtonEnum.TOP_RIGHT)
-        button_render.place_button("Up", width, BTN_HEIGHT, ButtonEnum.BOTTOM_LEFT)
-        button_render.place_button("Down", width, BTN_HEIGHT, ButtonEnum.BOTTOM_RIGHT)
-
-        for l in range(project.levers):
-            if project.get_sequence(self.step)[l] == 1:
+        for l in range(self.project.levers):
+            if self.project.get_sequence(self.step)[l] == 1:
                 self.set_up(l)
             else:
                 self.set_down(l)
         
-        display.update()
+        self.hardware.display.update()
 
         elapsed = 0.0
         exit = False
@@ -105,16 +117,16 @@ class Stage2():
             elapsed += 0.1
         
     def set_up(self, lever_num):
-        display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, HEIGHT - LEVER_DIST, self.radius)
-        display.line(self.margin + self.lever_width*lever_num + 3, LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, LEVER_DIST)
+        self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.radius)
+        self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.LEVER_DIST)
     
     def set_down(self, lever_num):
-        display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, LEVER_DIST, self.radius)
-        display.line(self.margin + self.lever_width*lever_num + 3, HEIGHT - LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, HEIGHT - LEVER_DIST)
+        self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.LEVER_DIST, self.radius)
+        self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.HEIGHT - self.hardware.LEVER_DIST)
         
 
-def setup():
-    stage1 = Stage1()
+def setup(hardware, project):
+    stage1 = Stage1(hardware, project)
     stage1.open()
 
     project.initialize()
@@ -122,12 +134,12 @@ def setup():
     setup_finished = False
     step = 0
 
-    lever_width = min((WIDTH - 20) / project.levers, MAX_LEVER_WIDTH)
-    margin = (WIDTH - project.levers * lever_width)/2
+    lever_width = min((hardware.WIDTH - 20) / project.levers, hardware.MAX_LEVER_WIDTH)
+    margin = (hardware.WIDTH - project.levers * lever_width)/2
     radius = int(lever_width/2 - 3) 
 
     while not setup_finished:
-        stage2 = Stage2(step, lever_width, margin, radius)
+        stage2 = Stage2(hardware, project, step, lever_width, margin, radius)
         stage2.open()
 
         if stage2.next:
