@@ -1,14 +1,14 @@
-from ui.button_render import ButtonEnum
-from ..main import display, WIDTH, HEIGHT, button_a, button_b, button_y, backlight, BTN_HEIGHT
+from ui.button_render import TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
-from picographics import measure_text
-import button_render
+from ui import button_render
 
 class Welcome():
 
-    bright_up = button_a
-    bright_down = button_b
-    next_screen = button_y
+    def __init__(self, hardware):
+        self.hardware = hardware
+        self.bright_up = self.hardware.button_a
+        self.bright_down = self.hardware.button_b
+        self.next_screen = self.hardware.button_y
 
     def open(self):
         # Main display
@@ -18,35 +18,40 @@ class Welcome():
         while not finished:
             time.sleep(0.1)
             if self.bright_up.read():
-                if backlight < 1:
-                    backlight = backlight + 0.1
-                    display.set_backlight = backlight
+                if self.hardware.backlight < 1.0:
+                    self.hardware.backlight = self.hardware.backlight + 0.1
+                    if self.hardware.backlight > 1.0:
+                        self.hardware.backlight = 1.0
+                    self.hardware.display.set_backlight(self.hardware.backlight)
                     self.main_display()
             if self.bright_down.read():
-                if backlight > 0.1:
-                    backlight = backlight - 0.1
-                    display.set_backlight = backlight
+                if self.hardware.backlight > 0.1:
+                    self.hardware.backlight = self.hardware.backlight - 0.1
+                    self.hardware.display.set_backlight(self.hardware.backlight)
                     self.main_display()
             if self.next_screen.read():
                 finished = True
 
     
     def main_display(self):
-        display.clear()
-        display.text("Welcome!", WIDTH/2, HEIGHT/2)
+        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.display.clear()
+        self.hardware.display.set_pen(self.hardware.FG)
+        width = self.hardware.display.measure_text('Welcome!', scale=1.0)
+        self.hardware.display.text("Welcome!", int(self.hardware.WIDTH/2)-int(width/2), int(self.hardware.HEIGHT/2), scale=1.0)
         # Brightness box
-        display.line(5, 5, 5, HEIGHT - 5)
-        display.line(5, 5, 10, 5)
-        display.line(10, 5, 10, HEIGHT - 5)
-        display.line(5, HEIGHT - 5, 10, HEIGHT - 5)
+        self.hardware.display.line(5, 5, 5, self.hardware.HEIGHT - 5)
+        self.hardware.display.line(5, 5, 10, 5)
+        self.hardware.display.line(10, 5, 10, self.hardware.HEIGHT - 5)
+        self.hardware.display.line(5, self.hardware.HEIGHT - 5, 10, self.hardware.HEIGHT - 5)
         # And value
-        display.rectangle(5, 5, 5, (HEIGHT - 10) * backlight)
+        self.hardware.display.rectangle(5, int((self.hardware.HEIGHT - 10) * (1.0-self.hardware.backlight)) + 5, 5, int((self.hardware.HEIGHT - 10) * self.hardware.backlight))
 
         # Buttons
-        width = max(measure_text("Bright -"), measure_text("Bright +"))
-        button_render.place_button("Bright +", width, BTN_HEIGHT, ButtonEnum.TOP_LEFT)
-        button_render.place_button("Bright -", width, BTN_HEIGHT, ButtonEnum.BOTTOM_LEFT)
-        button_render.place_button("Start", width, BTN_HEIGHT, ButtonEnum.BOTTOM_RIGHT)
-
-        display.update()
+        width = max(self.hardware.display.measure_text("Bright -", scale=0.5), self.hardware.display.measure_text("Bright +", scale=0.5))
+        button_render.place_button(self.hardware, "Bright +", width, self.hardware.BTN_HEIGHT, TOP_LEFT, width_pad = 11)
+        button_render.place_button(self.hardware, "Bright -", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT, width_pad = 11)
+        width = self.hardware.display.measure_text("Start", scale=0.5)
+        button_render.place_button(self.hardware, "Start", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
+        self.hardware.display.update()
 
