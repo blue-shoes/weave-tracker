@@ -23,3 +23,9 @@ class Hardware():
 
         self.BG = self.display.create_pen(40,40,40)
         self.FG = self.display.create_pen(225, 225, 225)
+    
+    def set_fg_pen(self):
+        self.display.set_pen(self.FG)
+    
+    def set_bg_pen(self):
+        self.display.set_pen(self.BG)

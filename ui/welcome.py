@@ -34,9 +34,9 @@ class Welcome():
 
     
     def main_display(self):
-        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.set_bg_pen()
         self.hardware.display.clear()
-        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.set_fg_pen()
         width = self.hardware.display.measure_text('Welcome!', scale=1.0)
         self.hardware.display.text("Welcome!", int(self.hardware.WIDTH/2)-int(width/2), int(self.hardware.HEIGHT/2), scale=1.0)
         # Brightness box

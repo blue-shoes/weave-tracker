@@ -16,9 +16,9 @@ class Stage1():
         self.project = project
 
     def open(self):
-        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.set_bg_pen()
         self.hardware.display.clear()
-        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.set_fg_pen()
         self.hardware.display.text("Steps:", self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
         self.hardware.display.text("Levers:", 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
 
@@ -63,16 +63,16 @@ class Stage1():
         self.update_levers()
     
     def update_steps(self):
-        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.set_bg_pen()
         self.hardware.display.rectangle(self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
-        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.set_fg_pen()
         self.hardware.display.text(self.project.total_steps, self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
         self.hardware.display.update()
     
     def update_levers(self):
-        self.hardware.display.set_pen(self.hardware.BG)
+        self.hardware.set_bg_pen()
         self.hardware.display.rectangle(5*self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
-        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.set_fg_pen()
         self.hardware.display.text(self.project.levers, 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
         self.hardware.display.update()
 
@@ -88,10 +88,10 @@ class Stage2():
         self.radius = radius
 
     def open(self):
-        next = False
-        self.hardware.display.set_pen(self.hardware.BG)
+        self.next = False
+        self.hardware.set_bg_pen()
         self.hardware.display.clear()
-        self.hardware.display.set_pen(self.hardware.FG)
+        self.hardware.set_fg_pen()
         self.hardware.display.text(f"Step {self.step}/{self.project.total_steps}", self.hardware.WIDTH/2, self.hardware.HEIGHT - 20)
 
         self.hardware.display.text("Set Lever positions", self.hardware.WIDTH/2, 20)
