@@ -159,6 +159,7 @@ class Stage2():
                     else:
                         self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - 2*(self.radius+3), 2*(self.radius+3), 2*(self.radius+3))
                     self.hardware.set_fg_pen()
+                self.hardware.display.update()
             
     def set_up(self, lever_num):
         self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.LEVER_DIST, self.radius)
