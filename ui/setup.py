@@ -2,10 +2,7 @@ from ui.button_render import TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
 from ui import button_render
 
-up_btn = button_a
-down_btn = button_b
-back_btn = button_x
-next_btn = button_y
+
 
 class Stage1():
 
@@ -14,6 +11,10 @@ class Stage1():
     def __init__(self, hardware, project):
         self.hardware = hardware
         self.project = project
+        self.up_btn = self.hardware.button_a
+        self.down_btn = self.hardware.button_b
+        self.back_btn = self.hardware.button_x
+        self.next_btn = self.hardware.button_y
 
     def open(self):
         self.hardware.set_bg_pen()
@@ -33,14 +34,14 @@ class Stage1():
         finished = False
         while not finished:
             time.sleep(0.1)
-            if up_btn.read():
+            if self.up_btn.read():
                 if self.steps:
                     self.project.total_steps = self.project.total_steps+1
                     self.update_steps()
                 else:
                     self.project.levers = self.project.levers+1
                     self.update_levers()
-            if down_btn.read():
+            if self.down_btn.read():
                 if self.steps:
                     if self.project.total_steps > 1:
                         self.project.total_steps = self.project.total_steps-1
@@ -49,12 +50,12 @@ class Stage1():
                     if self.project.levers > 1:
                         self.project.levers = self.project.levers-1
                         self.update_levers()
-            if next_btn.read():
+            if self.next_btn.read():
                 if self.steps:
                     self.steps = False
                 else:
                     finished = True
-            if back_btn.read():
+            if self.back_btn.read():
                 if not self.steps:
                     self.steps = True
     
@@ -86,6 +87,10 @@ class Stage2():
         self.lever_width = lever_width
         self.margin = margin
         self.radius = radius
+        self.up_btn = self.hardware.button_a
+        self.down_btn = self.hardware.button_b
+        self.back_btn = self.hardware.button_x
+        self.next_btn = self.hardware.button_y
 
     def open(self):
         self.next = False
