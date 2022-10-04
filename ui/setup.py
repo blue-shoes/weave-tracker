@@ -115,19 +115,63 @@ class Stage2():
         
         self.hardware.display.update()
 
-        elapsed = 0.0
+        elapsed = 0
         exit = False
         while not exit:
             time.sleep(0.1)
-            elapsed += 0.1
-        
+            elapsed += 1
+            if self.up_btn.read():
+                if self.project.get_sequence(self.step)[self.lever] != 1:
+                    self.project.get_sequence(self.step)[self.lever] = 1
+                    self.clear_lever(self.lever)
+                    self.set_up(self.lever)
+                    elapsed = 0
+            if self.down_btn.read():
+                if self.project.get_sequence(self.step)[self.lever] != 0:
+                    self.project.get_sequence(self.step)[self.lever] = 0
+                    self.clear_lever(self.lever)
+                    self.set_down(self.lever)
+                    elapsed = 0
+            if self.next_btn.read():
+                self.lever = self.lever + 1
+                if self.lever == self.project.levers:
+                    exit = True
+                    self.next = True
+                elapsed = 0
+            if self.back_btn.read():
+                if self.lever == 0:
+                    exit = True
+                else:
+                    self.lever = self.lever - 1
+                elapsed = 0
+            if elapsed % 5 == 0:
+                if elapsed % 2 == 0:
+                    # Blink on
+                    if self.project.get_sequence(self.step)[self.lever] == 1:
+                        self.set_up(self.lever)
+                    else:
+                        self.set_down(self.lever)
+                else:
+                    # Blink off
+                    self.hardware.set_bg_pen()
+                    if self.project.get_sequence(self.step)[self.lever] == 1:
+                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.LEVER_DIST, 2*(self.radius+3), 2*(self.radius+3))
+                    else:
+                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - 2*(self.radius+3), 2*(self.radius+3), 2*(self.radius+3))
+                    self.hardware.set_fg_pen()
             
     def set_up(self, lever_num):
         self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.LEVER_DIST, self.radius)
         self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.LEVER_DIST)
     
     def set_down(self, lever_num):
-        
+        self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.radius)
+        self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.HEIGHT - self.hardware.LEVER_DIST)
+
+    def clear_lever(self, lever_num):
+        self.hardware.set_bg_pen()
+        self.hardware.display.rectangle(self.margin + self.lever_width*lever_num, self.hardware.LEVER_DIST - self.radius, 2*(self.radius+3), self.hardware.HEIGHT - 2*(self.hardware.LEVER_DIST))
+        self.hardware.set_fg_pen()
 
 def setup(hardware, project):
     stage1 = Stage1(hardware, project)
