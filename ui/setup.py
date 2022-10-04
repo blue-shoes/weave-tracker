@@ -134,8 +134,8 @@ def setup(hardware, project):
     setup_finished = False
     step = 0
 
-    lever_width = min((hardware.WIDTH - 20) / project.levers, hardware.MAX_LEVER_WIDTH)
-    margin = (hardware.WIDTH - project.levers * lever_width)/2
+    lever_width = int(min((hardware.WIDTH - 20) / project.levers, hardware.MAX_LEVER_WIDTH))
+    margin = int((hardware.WIDTH - project.levers * lever_width)/2)
     radius = int(lever_width/2 - 3) 
 
     while not setup_finished:
