@@ -6,7 +6,7 @@ class Project():
         self.total_steps=total_steps
     
     def get_sequence(self, step):
-        self.sequence[step]
+        return self.sequence[step]
     
     def get_next_sequence(self):
         self.current_step = self.current_step+1
