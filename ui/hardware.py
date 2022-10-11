@@ -29,3 +29,7 @@ class Hardware():
     
     def set_bg_pen(self):
         self.display.set_pen(self.BG)
+    
+    def place_text(self, text, scale, x_cntr, y_cntr):
+        width = self.display.measure_text(text, scale=scale)
+        self.display.text(text, int(x_cntr - width/2), y_cntr, scale=scale)
