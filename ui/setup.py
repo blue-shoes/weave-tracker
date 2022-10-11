@@ -1,6 +1,7 @@
 from ui.button_render import TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
-from ui import button_render
+from ui import button_render, hardware
+import project
 
 
 
@@ -20,8 +21,8 @@ class Stage1():
         self.hardware.set_bg_pen()
         self.hardware.display.clear()
         self.hardware.set_fg_pen()
-        self.hardware.display.text("Steps:", self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
-        self.hardware.display.text("Levers:", 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
+        self.hardware.place_text("Steps", 1.0, int(self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
+        self.hardware.place_text("Levers", 1.0, int(3*self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
 
         width = max(self.hardware.display.measure_text("Increase", scale=0.5), self.hardware.display.measure_text("Decrease", scale=0.5))
         button_render.place_button(self.hardware, "Back", width, self.hardware.BTN_HEIGHT, TOP_LEFT)
@@ -65,16 +66,16 @@ class Stage1():
     
     def update_steps(self):
         self.hardware.set_bg_pen()
-        self.hardware.display.rectangle(self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
+        self.hardware.display.rectangle(int(self.hardware.WIDTH/8), int(self.hardware.HEIGHT/2), int(self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
         self.hardware.set_fg_pen()
-        self.hardware.display.text(self.project.total_steps, self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
+        self.hardware.place_text(str(self.project.total_steps), 1.0, int(self.hardware.WIDTH/4), int(2*self.hardware.HEIGHT/3))
         self.hardware.display.update()
     
     def update_levers(self):
         self.hardware.set_bg_pen()
-        self.hardware.display.rectangle(5*self.hardware.WIDTH/8, self.hardware.HEIGHT/2, self.hardware.WIDTH/4, self.hardware.HEIGHT/3)
+        self.hardware.display.rectangle(int(5*self.hardware.WIDTH/8), int(self.hardware.HEIGHT/2), int(self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
         self.hardware.set_fg_pen()
-        self.hardware.display.text(self.project.levers, 3*self.hardware.WIDTH/4, 2*self.hardware.HEIGHT/3)
+        self.hardware.place_text(str(self.project.levers), 1.0, int(3*self.hardware.WIDTH/4), int(2*self.hardware.HEIGHT/3))
         self.hardware.display.update()
 
 class Stage2():
@@ -97,11 +98,9 @@ class Stage2():
         self.hardware.set_bg_pen()
         self.hardware.display.clear()
         self.hardware.set_fg_pen()
-        self.hardware.display.text(f"Step {self.step}/{self.project.total_steps}", self.hardware.WIDTH/2, self.hardware.HEIGHT - 20)
-
-        self.hardware.display.text("Set Lever positions", self.hardware.WIDTH/2, 20)
-
-        width = max(self.hardware.display.measure_text("Increase"), self.hardware.display.measure_text("Decrease"))
+        self.hardware.place_text(f"Step {self.step+1}/{self.project.total_steps}", 0.75, int(self.hardware.WIDTH/2), self.hardware.HEIGHT - 20)
+        self.hardware.place_text("Set Lever positions", 0.75, int(self.hardware.WIDTH/2), 20)
+        width = max(self.hardware.display.measure_text("Increase", scale=0.5), self.hardware.display.measure_text("Decrease", scale=0.5))
         button_render.place_button(self.hardware, "Back", width, self.hardware.BTN_HEIGHT, TOP_LEFT)
         button_render.place_button(self.hardware, "Next", width, self.hardware.BTN_HEIGHT, TOP_RIGHT)
         button_render.place_button(self.hardware, "Up", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
