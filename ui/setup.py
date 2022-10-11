@@ -106,13 +106,7 @@ class Stage2():
         button_render.place_button(self.hardware, "Up", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
         button_render.place_button(self.hardware, "Down", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
 
-        for l in range(self.project.levers):
-            if self.project.get_sequence(self.step)[l] == 1:
-                self.set_up(l)
-            else:
-                self.set_down(l)
-        
-        self.hardware.display.update()
+        self.refresh_levers()    
 
         elapsed = 0
         exit = False
@@ -132,6 +126,7 @@ class Stage2():
                     self.set_down(self.lever)
                     elapsed = 0
             if self.next_btn.read():
+                self.refresh_levers()
                 self.lever = self.lever + 1
                 if self.lever == self.project.levers:
                     exit = True
@@ -159,7 +154,15 @@ class Stage2():
                         self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - 2*(self.radius+3), 2*(self.radius+3), 2*(self.radius+3))
                     self.hardware.set_fg_pen()
                 self.hardware.display.update()
-            
+
+    def refresh_levers(self):
+        for l in range(self.project.levers):
+            if self.project.get_sequence(self.step)[l] == 1:
+                self.set_up(l)
+            else:
+                self.set_down(l)
+        self.hardware.display.update()
+    
     def set_up(self, lever_num):
         self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.LEVER_DIST, self.radius)
         self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.LEVER_DIST)
