@@ -9,13 +9,13 @@ class Stage1():
 
     steps = True
     
-    def __init__(self, hardware, project):
+    def __init__(self, hardware : hardware.Hardware, project : project.Project):
         self.hardware = hardware
         self.project = project
-        self.up_btn = self.hardware.button_a
-        self.down_btn = self.hardware.button_b
-        self.back_btn = self.hardware.button_x
-        self.next_btn = self.hardware.button_y
+        self.up_btn = self.hardware.button_b
+        self.down_btn = self.hardware.button_y
+        self.back_btn = self.hardware.button_a
+        self.next_btn = self.hardware.button_x
 
     def open(self):
         self.hardware.set_bg_pen()
@@ -88,10 +88,10 @@ class Stage2():
         self.lever_width = lever_width
         self.margin = margin
         self.radius = radius
-        self.up_btn = self.hardware.button_a
-        self.down_btn = self.hardware.button_b
-        self.back_btn = self.hardware.button_x
-        self.next_btn = self.hardware.button_y
+        self.up_btn = self.hardware.button_b
+        self.down_btn = self.hardware.button_y
+        self.back_btn = self.hardware.button_a
+        self.next_btn = self.hardware.button_x
 
     def open(self):
         self.next = False
