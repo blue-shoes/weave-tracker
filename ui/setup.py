@@ -80,7 +80,7 @@ class Stage1():
 
 class Stage2():
 
-    def __init__(self, hardware, project, step, lever_width, margin, radius):
+    def __init__(self, hardware : hardware.Hardware, project : project.Project, step, lever_width, margin, radius):
         self.hardware = hardware
         self.project = project
         self.step = step
@@ -176,7 +176,32 @@ class Stage2():
         self.hardware.display.rectangle(self.margin + self.lever_width*lever_num, self.hardware.LEVER_DIST - self.radius, 2*(self.radius+3),  self.hardware.HEIGHT - 2*(self.hardware.LEVER_DIST))
         self.hardware.set_fg_pen()
 
-def setup(hardware, project):
+class Confirmation():
+
+    def __init__(self, hardware : hardware.Hardware):
+        self.hardware = hardware
+        self.back_btn = self.hardware.button_b
+        self.start_proj = self.hardware.button_y
+    
+    def open(self):
+        # Main display
+        self.hardware.set_bg_pen()
+        self.hardware.display.clear()
+        self.hardware.set_fg_pen()
+        self.hardware.place_text("Start Project?", 1.0, int(self.hardware.WIDTH/2), int(self.hardware.HEIGHT/2))
+        width = self.hardware.display.measure_text("Start", scale=0.5)
+        button_render.place_button(self.hardware, "Back", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
+        button_render.place_button(self.hardware, "Start", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
+        finished = False
+
+        while not finished:
+            time.sleep(0.1)
+            if self.back_btn.read():
+                return False
+            if self.start_proj.read():
+                return True
+
+def setup(hardware : hardware.Hardware, project :project.Project):
     stage1 = Stage1(hardware, project)
     stage1.open()
 
@@ -198,5 +223,8 @@ def setup(hardware, project):
         elif step > 0:
             step -= 1
         if step == project.total_steps:
-            setup_finished = True
+            confirm = Confirmation()
+            setup_finished = confirm.open()
+            if not setup_finished:
+                step -= 1
 
