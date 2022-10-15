@@ -195,6 +195,8 @@ class Confirmation():
         button_render.place_button(self.hardware, "Start", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
         finished = False
 
+        self.hardware.display.update()
+
         while not finished:
             time.sleep(0.1)
             if self.back_btn.read():
@@ -224,7 +226,7 @@ def setup(hardware : hardware.Hardware, project :project.Project):
         elif step > 0:
             step -= 1
         if step == project.total_steps:
-            confirm = Confirmation()
+            confirm = Confirmation(hardware)
             setup_finished = confirm.open()
             if not setup_finished:
                 step -= 1
