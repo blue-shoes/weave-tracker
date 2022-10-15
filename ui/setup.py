@@ -33,32 +33,59 @@ class Stage1():
         self.update_display()
 
         finished = False
+        elapsed = 0
         while not finished:
             time.sleep(0.1)
+            elapsed += 1
             if self.up_btn.read():
                 if self.steps:
                     self.project.total_steps = self.project.total_steps+1
                     self.update_steps()
+                    elasped = 0
                 else:
                     self.project.levers = self.project.levers+1
                     self.update_levers()
+                    elapsed = 0
             if self.down_btn.read():
                 if self.steps:
                     if self.project.total_steps > 1:
                         self.project.total_steps = self.project.total_steps-1
                         self.update_steps()
+                        elapsed = 0
                 else:
                     if self.project.levers > 1:
                         self.project.levers = self.project.levers-1
                         self.update_levers()
+                        elapsed = 0
             if self.next_btn.read():
                 if self.steps:
                     self.steps = False
+                    self.update_steps()
                 else:
                     finished = True
+                elapsed = 0
             if self.back_btn.read():
                 if not self.steps:
                     self.steps = True
+                    self.update_levers()
+                elapsed = 0
+            if elapsed % 5 == 0:
+                if elapsed % 2 == 0:
+                    # Blink on
+                    self.hardware.set_fg_pen()
+                    if self.steps:
+                        self.hardware.place_text(str(self.project.total_steps), 1.0, int(self.hardware.WIDTH/4), int(2*self.hardware.HEIGHT/3))
+                    else:
+                        self.hardware.place_text(str(self.project.levers), 1.0, int(3*self.hardware.WIDTH/4), int(2*self.hardware.HEIGHT/3))
+                else:
+                    # Blink off
+                    self.hardware.set_bg_pen()
+                    if self.steps:
+                        self.hardware.display.rectangle(int(self.hardware.WIDTH/8), int(self.hardware.HEIGHT/2), int(self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
+                    else:
+                        self.hardware.display.rectangle(int(5*self.hardware.WIDTH/8), int(self.hardware.HEIGHT/2), int(self.hardware.WIDTH/4), int(self.hardware.HEIGHT/3))
+                self.hardware.display.update()
+
     
     def update_display(self):
         self.update_steps()
