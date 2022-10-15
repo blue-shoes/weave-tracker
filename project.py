@@ -22,4 +22,4 @@ class Project():
     
     def initialize(self):
         for step in range(self.total_steps):
-            self.sequence[step] = [0 for x in range(self.levers)]
+            self.sequence[step] = [1 for x in range(self.levers)]
