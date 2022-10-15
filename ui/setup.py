@@ -131,6 +131,7 @@ class Stage2():
                 if self.lever == self.project.levers:
                     exit = True
                     self.next = True
+                    continue
                 elapsed = 0
             if self.back_btn.read():
                 if self.lever == 0:
