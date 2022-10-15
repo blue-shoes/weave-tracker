@@ -149,9 +149,9 @@ class Stage2():
                     # Blink off
                     self.hardware.set_bg_pen()
                     if self.project.get_sequence(self.step)[self.lever] == 1:
-                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.LEVER_DIST, 2*(self.radius+3), 2*(self.radius+3))
+                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.LEVER_DIST - self.radius - 3, 2*(self.radius+3), 2*(self.radius+3))
                     else:
-                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - 2*(self.radius+3), 2*(self.radius+3), 2*(self.radius+3))
+                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - self.radius-3, 2*(self.radius+3), 2*(self.radius+3))
                     self.hardware.set_fg_pen()
                 self.hardware.display.update()
 
@@ -173,7 +173,7 @@ class Stage2():
 
     def clear_lever(self, lever_num):
         self.hardware.set_bg_pen()
-        self.hardware.display.rectangle(self.margin + self.lever_width*lever_num, self.hardware.LEVER_DIST - self.radius, 2*(self.radius+3),  self.hardware.HEIGHT - 2*(self.hardware.LEVER_DIST))
+        self.hardware.display.rectangle(self.margin + self.lever_width*lever_num, self.hardware.LEVER_DIST - self.radius - 3, 2*(self.radius+3),  self.hardware.HEIGHT - 2*(self.hardware.LEVER_DIST - self.radius - 3))
         self.hardware.set_fg_pen()
 
 class Confirmation():
