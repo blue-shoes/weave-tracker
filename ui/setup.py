@@ -2,6 +2,7 @@ from ui.button_render import TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 import time
 from ui import button_render, hardware
 import project
+from ui.lever_render import LeverRender
 
 
 
@@ -107,18 +108,18 @@ class Stage1():
 
 class Stage2():
 
-    def __init__(self, hardware : hardware.Hardware, project : project.Project, step, lever_width, margin, radius):
+    def __init__(self, hardware : hardware.Hardware, project : project.Project, lever_renderer : LeverRender, step):
         self.hardware = hardware
         self.project = project
         self.step = step
         self.lever = 0
-        self.lever_width = lever_width
-        self.margin = margin
-        self.radius = radius
+        self.lev_rend = lever_renderer
         self.up_btn = self.hardware.button_b
         self.down_btn = self.hardware.button_y
         self.back_btn = self.hardware.button_a
         self.next_btn = self.hardware.button_x
+
+        lev_rend = LeverRender(hardware, project)
 
     def open(self):
         self.next = False
@@ -133,7 +134,7 @@ class Stage2():
         button_render.place_button(self.hardware, "Up", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
         button_render.place_button(self.hardware, "Down", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
 
-        self.refresh_levers()    
+        self.lev_rend.refresh_levers()    
 
         elapsed = 0
         exit = False
@@ -143,17 +144,17 @@ class Stage2():
             if self.up_btn.read():
                 if self.project.get_sequence(self.step)[self.lever] != 1:
                     self.project.get_sequence(self.step)[self.lever] = 1
-                    self.clear_lever(self.lever)
-                    self.set_up(self.lever)
+                    self.lev_rend.clear_lever(self.lever)
+                    self.lev_rend.set_up(self.lever)
                     elapsed = 0
             if self.down_btn.read():
                 if self.project.get_sequence(self.step)[self.lever] != 0:
                     self.project.get_sequence(self.step)[self.lever] = 0
-                    self.clear_lever(self.lever)
-                    self.set_down(self.lever)
+                    self.lev_rend.clear_lever(self.lever)
+                    self.lev_rend.set_down(self.lever)
                     elapsed = 0
             if self.next_btn.read():
-                self.refresh_levers()
+                self.lev_rend.refresh_levers()
                 self.lever = self.lever + 1
                 if self.lever == self.project.levers:
                     exit = True
@@ -170,39 +171,20 @@ class Stage2():
                 if elapsed % 2 == 0:
                     # Blink on
                     if self.project.get_sequence(self.step)[self.lever] == 1:
-                        self.set_up(self.lever)
+                        self.lev_rend.set_up(self.lever)
                     else:
-                        self.set_down(self.lever)
+                        self.lev_rend.set_down(self.lever)
                 else:
                     # Blink off
                     self.hardware.set_bg_pen()
                     if self.project.get_sequence(self.step)[self.lever] == 1:
-                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.LEVER_DIST - self.radius - 3, 2*(self.radius+3), 2*(self.radius+3))
+                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.LEVER_DIST - self.lev_rend.radius - 3, 2*(self.lev_rend.radius+3), 2*(self.lev_rend.radius+3))
                     else:
-                        self.hardware.display.rectangle(self.margin + self.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - self.radius-3, 2*(self.radius+3), 2*(self.radius+3))
+                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - self.lev_rend.radius-3, 2*(self.lev_rend.radius+3), 2*(self.lev_rend.radius+3))
                     self.hardware.set_fg_pen()
                 self.hardware.display.update()
 
-    def refresh_levers(self):
-        for l in range(self.project.levers):
-            if self.project.get_sequence(self.step)[l] == 1:
-                self.set_up(l)
-            else:
-                self.set_down(l)
-        self.hardware.display.update()
-    
-    def set_up(self, lever_num):
-        self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.LEVER_DIST, self.radius)
-        self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.HEIGHT - self.hardware.LEVER_DIST)
-    
-    def set_down(self, lever_num):
-        self.hardware.display.circle(self.margin + self.lever_width*lever_num + self.radius + 3, self.hardware.HEIGHT - self.hardware.LEVER_DIST, self.radius)
-        self.hardware.display.line(self.margin + self.lever_width*lever_num + 3, self.hardware.LEVER_DIST, self.margin + self.lever_width*lever_num + 3 + 2*self.radius, self.hardware.LEVER_DIST)
 
-    def clear_lever(self, lever_num):
-        self.hardware.set_bg_pen()
-        self.hardware.display.rectangle(self.margin + self.lever_width*lever_num, self.hardware.LEVER_DIST - self.radius - 3, 2*(self.radius+3),  self.hardware.HEIGHT - 2*(self.hardware.LEVER_DIST - self.radius - 3))
-        self.hardware.set_fg_pen()
 
 class Confirmation():
 
@@ -240,12 +222,10 @@ def setup(hardware : hardware.Hardware, project :project.Project):
     setup_finished = False
     step = 0
 
-    lever_width = int(min((hardware.WIDTH - 20) / project.levers, hardware.MAX_LEVER_WIDTH))
-    margin = int((hardware.WIDTH - project.levers * lever_width)/2)
-    radius = int(lever_width/2 - 3) 
+    lev_rend = LeverRender(hardware, project)
 
     while not setup_finished:
-        stage2 = Stage2(hardware, project, step, lever_width, margin, radius)
+        stage2 = Stage2(hardware, project, lev_rend, step)
         stage2.open()
 
         if stage2.next:
