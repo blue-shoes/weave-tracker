@@ -3,7 +3,7 @@
 from project import Project
 from ui.welcome import Welcome
 from ui.start import StartMenu
-from ui import setup
+from ui import setup, track
 from ui.hardware import Hardware
 import os
 import json
@@ -32,3 +32,5 @@ start.open()
 if start.new_proj:
     project = Project()
     setup.setup(hardware, project)
+
+track.run(hardware, project)
