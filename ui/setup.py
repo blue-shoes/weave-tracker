@@ -241,9 +241,17 @@ def setup(hardware : hardware.Hardware, project :project.Project):
 
     # Save project file
     project.current_step = 0
-    if not os.path.exists('/data'):
+
+    if not data_dir_exists():
         os.mkdir('/data')
     with open(project_file, 'w') as json_file:
-        json_file.write(json.dump(project))
+        json_file.write(json.dumps(project.__dict__)) 
     with open(c_step_file, 'w') as step_file:
         step_file.write(str(project.current_step))
+
+def data_dir_exists():
+    try:
+        os.stat('/data')
+        return True
+    except:
+        return False

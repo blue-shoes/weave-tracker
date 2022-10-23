@@ -1,9 +1,10 @@
 class Project():
-    def __init__(self, total_steps=4, levers=4, current_step=0):
+    def __init__(self, total_steps=4, levers=4, current_step=0, sequence={}):
         self.levers = levers
-        self.current_step=0
-        self.sequence={}
+        self.current_step=current_step
+        self.sequence={int(key):sequence[key] for key in sequence}
         self.total_steps=total_steps
+
     
     def get_sequence(self, step):
         return self.sequence[step]
