@@ -135,7 +135,7 @@ class Stage2():
         button_render.place_button(self.hardware, "Up", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
         button_render.place_button(self.hardware, "Down", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
 
-        self.lev_rend.refresh_levers()    
+        self.lev_rend.refresh_levers(self.step)    
 
         elapsed = 0
         exit = False
@@ -155,7 +155,7 @@ class Stage2():
                     self.lev_rend.set_down(self.lever)
                     elapsed = 0
             if self.next_btn.read():
-                self.lev_rend.refresh_levers()
+                self.lev_rend.refresh_levers(self.step)
                 self.lever = self.lever + 1
                 if self.lever == self.project.levers:
                     exit = True

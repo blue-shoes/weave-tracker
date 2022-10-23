@@ -16,9 +16,9 @@ class LeverRender():
         self.radius = int(self.lever_width/2 - self.L_PAD) 
 
 
-    def refresh_levers(self):
+    def refresh_levers(self, step):
         for l in range(self.project.levers):
-            if self.project.get_sequence(self.step)[l] == 1:
+            if self.project.get_sequence(step)[l] == 1:
                 self.set_up(l)
             else:
                 self.set_down(l)
