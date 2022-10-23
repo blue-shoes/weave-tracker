@@ -3,8 +3,9 @@ import time
 from ui import button_render, hardware
 import project
 from ui.lever_render import LeverRender
-
-
+import json
+import os
+from const import project_file, c_step_file
 
 class Stage1():
 
@@ -238,3 +239,11 @@ def setup(hardware : hardware.Hardware, project :project.Project):
             if not setup_finished:
                 step -= 1
 
+    # Save project file
+    project.current_step = 0
+    if not os.path.exists('/data'):
+        os.mkdir('/data')
+    with open(project_file, 'w') as json_file:
+        json_file.write(json.dump(project))
+    with open(c_step_file, 'w') as step_file:
+        step_file.write(str(project.current_step))

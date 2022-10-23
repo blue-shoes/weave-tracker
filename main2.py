@@ -7,15 +7,16 @@ from ui import setup
 from ui.hardware import Hardware
 import os
 import json
-
-project_file = "/flash/project.json"
+from const import project_file, c_step_file
 
 hardware = Hardware()
 
 project = None
-#if os.path.exists(project_file):
-#    f = open(project_file)
-#    project = json.load(f)
+if os.path.exists(project_file):
+    f = open(project_file)
+    project = json.load(f)
+    c = open(c_step_file)
+    project.current_step = int(c.readline())
 
 welcome = Welcome(hardware)
 welcome.open()
