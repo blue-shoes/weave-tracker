@@ -31,9 +31,9 @@ class StartMenu():
         width = self.hardware.display.measure_text('Start Menu',scale=1.0)
         self.hardware.display.text("Start Menu", int(self.hardware.WIDTH/2 - width/2), int(self.hardware.HEIGHT/2), scale=1.0)
 
-        width = self.hardware.display.measure_text("Resume Project", scale=0.5)
+        width = self.hardware.display.measure_text("Resume Proj.", scale=0.5)
 
         if self.project is not None:
-            button_render.place_button(self.hardware, "Resume Project", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
-        button_render.place_button(self.hardware, "New Project", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
+            button_render.place_button(self.hardware, "Resume Proj.", width, self.hardware.BTN_HEIGHT, BOTTOM_LEFT)
+        button_render.place_button(self.hardware, "New Proj.", width, self.hardware.BTN_HEIGHT, BOTTOM_RIGHT)
         self.hardware.display.update()
