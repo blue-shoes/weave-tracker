@@ -178,9 +178,9 @@ class Stage2():
                     # Blink off
                     self.hardware.set_bg_pen()
                     if self.project.get_sequence(self.step)[self.lever] == 1:
-                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.LEVER_DIST - self.lev_rend.radius - 3, 2*(self.lev_rend.radius+3), 2*(self.lev_rend.radius+3))
+                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.LEVER_DIST - self.lev_rend.radius - self.lev_rend.L_PAD, 2*(self.lev_rend.radius+self.lev_rend.L_PAD), 2*(self.lev_rend.radius+self.lev_rend.L_PAD))
                     else:
-                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - self.lev_rend.radius-3, 2*(self.lev_rend.radius+3), 2*(self.lev_rend.radius+3))
+                        self.hardware.display.rectangle(self.lev_rend.margin + self.lev_rend.lever_width*self.lever, self.hardware.HEIGHT - self.hardware.LEVER_DIST - self.lev_rend.radius-self.lev_rend.L_PAD, 2*(self.lev_rend.radius+self.lev_rend.L_PAD), 2*(self.lev_rend.radius+self.lev_rend.L_PAD))
                     self.hardware.set_fg_pen()
                 self.hardware.display.update()
 
